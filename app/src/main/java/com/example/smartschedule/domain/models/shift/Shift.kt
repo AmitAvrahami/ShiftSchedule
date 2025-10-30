@@ -19,3 +19,60 @@ interface ShiftStrategy{
     fun isOverNight(): Boolean
 
 }
+
+class MorningShiftStrategy : ShiftStrategy{
+    override fun getStartTime(): LocalDateTime {
+        TODO("Not yet implemented")
+    }
+
+    override fun getEndTime(): LocalDateTime {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRequiredEmployees(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun isOverNight(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+}
+
+class AfterNoonShiftStrategy : ShiftStrategy{
+    override fun getStartTime(): LocalDateTime {
+        TODO("Not yet implemented")
+    }
+
+    override fun getEndTime(): LocalDateTime {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRequiredEmployees(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun isOverNight(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+}
+
+class NightShiftStrategy: ShiftStrategy {
+    override fun getStartTime(): LocalDateTime {
+        TODO("Not yet implemented")
+    }
+
+    override fun getEndTime(): LocalDateTime {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRequiredEmployees(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun isOverNight(): Boolean {
+        TODO("Not yet implemented")
+    }
+}
+

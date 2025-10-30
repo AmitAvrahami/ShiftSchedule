@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "74560213235",
+    "project_id": "smartschedule-7b525",
+    "storage_bucket": "smartschedule-7b525.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74560213235:android:f7f1fe70c396c1b32b2786",
+        "android_client_info": {
+          "package_name": "com.example.smartschedule"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkI9ahBUDzfQ5YykS3znr4BMYduVeT9-4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,19 +2,22 @@ package com.example.smartschedule.presentation.viewmodel.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.smartschedule.data.repository.AuthRepository
+import com.example.smartschedule.data.repository.auth.AuthRepository
 import com.example.smartschedule.data.repository.Result
+import com.example.smartschedule.domain.models.user.roles.EmployeeRole
+import com.example.smartschedule.domain.models.user.roles.ManagerRole
+import com.example.smartschedule.domain.models.user.roles.Roles
 import com.example.smartschedule.domain.usecase.auth.SignupUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.*
 import com.example.smartschedule.presentation.screens.auth.signup.SignUpState
 import com.example.smartschedule.presentation.screens.auth.signup.SignUpUiEvent
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -77,6 +80,18 @@ class SignUpViewModel @Inject constructor(
 
             SignUpUiEvent.SignUpClicked -> signUp()
             SignUpUiEvent.LoginClicked -> { /* Navigate to login */ }
+            is SignUpUiEvent.ToggleRole -> {
+                println(event.role)
+                when (event.role) {
+                    Roles.EMPLOYEE  -> {
+                        _uiState.update { it.copy(role = Roles.EMPLOYEE) }
+                    }
+                    Roles.MANAGER  -> {
+                        _uiState.update { it.copy(role =Roles.MANAGER) }
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 
@@ -122,6 +137,7 @@ class SignUpViewModel @Inject constructor(
 
         viewModelScope.launch {
             signUpUseCase(
+                role = uiState.value.role,
                 nationalId = state.nationalId,
                 name = state.fullName,
                 email = state.email,

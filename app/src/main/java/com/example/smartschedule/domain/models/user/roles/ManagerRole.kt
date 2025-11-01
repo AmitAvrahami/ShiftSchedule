@@ -12,7 +12,6 @@ class ManagerRole(
     maxShifts: Int = 5,
     hireDate: LocalDate,
     notes: String? = null,
-    val teamId: String
 ) : EmployeeRole(constraints, minShifts, maxShifts, hireDate, notes) {
 
     init {
@@ -28,5 +27,5 @@ class ManagerRole(
         )
     }
 
-    override fun getRoleName(): String = "Manager"
+    override fun getRole() : Roles = Roles.MANAGER
 }

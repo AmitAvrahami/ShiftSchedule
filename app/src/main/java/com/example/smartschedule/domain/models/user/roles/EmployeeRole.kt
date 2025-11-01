@@ -28,7 +28,7 @@ open class EmployeeRole(
         )
     }
 
-    override fun getRoleName(): String = "Employee"
+    override fun getRole(): Roles = Roles.EMPLOYEE
 
     override fun getPermissions(): List<Permission> = permissions.toList()
 

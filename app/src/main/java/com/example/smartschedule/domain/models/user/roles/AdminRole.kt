@@ -3,9 +3,8 @@ package com.example.smartschedule.domain.models.user.roles
 import com.example.smartschedule.domain.models.user.permissions.Permission
 
 class AdminRole : Role {
-    override fun getRoleName(): String {
-        return "Admin"
-    }
+
+    override fun getRole(): Roles = Roles.ADMIN
 
     override fun getPermissions(): List<Permission> {
         return emptyList()

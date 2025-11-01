@@ -1,6 +1,8 @@
 package com.example.smartschedule.presentation.screens.auth.signup
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,6 +24,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.smartschedule.domain.models.user.roles.Role
+import com.example.smartschedule.domain.models.user.roles.Roles
 import com.example.smartschedule.domain.usecase.auth.validation.ValidationField
 import com.example.smartschedule.presentation.viewmodel.auth.SignUpViewModel
 import com.example.smartschedule.ui.theme.SmartScheduleTheme
@@ -120,12 +124,50 @@ fun SignUpScreenContent(
             )
         }
 
+        // ROLE
+        Text(
+            text = "Role",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth().border(1.dp, Color.Gray, MaterialTheme.shapes.small),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+
+        ) {
+            RadioButton(
+                selected = uiState.role == Roles.EMPLOYEE,
+                onClick = {
+                    onEvent(SignUpUiEvent.ToggleRole(Roles.EMPLOYEE))
+                }
+            )
+            Text(
+                text = "Employee",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 4.dp, end = 16.dp)
+            )
+            RadioButton(
+                selected = uiState.role == Roles.MANAGER ,
+                onClick = {
+                    onEvent(SignUpUiEvent.ToggleRole(Roles.MANAGER))
+                }
+            )
+            Text(
+                text = "Manager",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 1.dp,)
+            )
+        }
+
+
         // EMAIL (optional)
         Text(
             text = "Email",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
         )
         OutlinedTextField(
             value = uiState.email,

@@ -1,8 +1,11 @@
 package com.example.smartschedule.di
 
-import com.example.smartschedule.data.repository.AuthRepository
-import com.example.smartschedule.data.repository.AuthRepositoryImpl
+import com.example.smartschedule.data.repository.auth.AuthRepository
+import com.example.smartschedule.data.repository.auth.AuthRepositoryImpl
+import com.example.smartschedule.data.repository.user.UserRepository
+import com.example.smartschedule.data.repository.user.UserRepositoryImpl
 import com.example.smartschedule.domain.usecase.auth.LoginUseCase
+import com.example.smartschedule.domain.usecase.auth.SignupUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateEmailUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateFullNameUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateNationalIdUseCase
@@ -34,9 +37,23 @@ object AppModule {
     fun provideAuthRepository(firebaseAuth: FirebaseAuth,fireStore: FirebaseFirestore): AuthRepository {
         return AuthRepositoryImpl(
             firebaseAuth = firebaseAuth,
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(fireStore: FirebaseFirestore): UserRepository {
+        return UserRepositoryImpl(
             fireStore = fireStore
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideSignUpUseCase(authRepository: AuthRepository,userRepository: UserRepository): SignupUseCase {
+        return SignupUseCase(authRepository,userRepository)
+    }
+
 
     @Provides
     @Singleton

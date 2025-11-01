@@ -1,6 +1,6 @@
 package com.example.smartschedule.domain.usecase.auth
 
-import com.example.smartschedule.data.repository.AuthRepository
+import com.example.smartschedule.data.repository.auth.AuthRepository
 import com.example.smartschedule.data.repository.Result
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow

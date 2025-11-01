@@ -2,7 +2,7 @@ package com.example.smartschedule.presentation.viewmodel.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.smartschedule.data.repository.AuthRepository
+import com.example.smartschedule.data.repository.auth.AuthRepository
 import com.example.smartschedule.data.repository.Result
 import com.example.smartschedule.domain.usecase.auth.LoginUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateEmailUseCase

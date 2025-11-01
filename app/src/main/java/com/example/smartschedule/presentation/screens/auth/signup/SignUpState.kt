@@ -1,5 +1,7 @@
 package com.example.smartschedule.presentation.screens.auth.signup
 
+import com.example.smartschedule.domain.models.user.roles.Role
+import com.example.smartschedule.domain.models.user.roles.Roles
 import com.example.smartschedule.domain.usecase.auth.validation.ValidationField
 
 data class SignUpState(
@@ -9,6 +11,7 @@ data class SignUpState(
     val password: String = "",
     val confirmPassword: String = "",
     val agreeToTerms: Boolean = false,
+    val role: Roles = Roles.EMPLOYEE,
     val isPasswordVisible: Boolean = false,
     val isConfirmPasswordVisible: Boolean = false,
     val isLoading: Boolean = false,

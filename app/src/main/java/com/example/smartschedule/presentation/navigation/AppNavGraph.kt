@@ -5,8 +5,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.smartschedule.domain.models.user.roles.Roles
 import com.example.smartschedule.presentation.screens.auth.login.LoginScreen
 import com.example.smartschedule.presentation.screens.auth.signup.SignUpScreen
+import com.example.smartschedule.presentation.screens.dashboards.employee.EmployeeDashboardScreen
+import com.example.smartschedule.presentation.screens.dashboards.manager.ManagerDashboardScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController){
@@ -16,8 +19,14 @@ fun AppNavGraph(navController: NavHostController){
     ){
         composable(Screen.Login.route){
             LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Screen.Home.route)
+                onLoginSuccess = { user ->
+                    user?.let { user ->
+                        when (user.role.getRole()) {
+                            Roles.ADMIN -> navController.navigate(Screen.ManagerDashBoard.route)
+                            Roles.MANAGER -> navController.navigate(Screen.ManagerDashBoard.route)
+                            Roles.EMPLOYEE -> navController.navigate(Screen.EmployeeDashBoard.route)
+                        }
+                    }
                 },
                 onSignUpClick = {
                     navController.navigate(Screen.SignUp.route)
@@ -27,9 +36,15 @@ fun AppNavGraph(navController: NavHostController){
         composable(Screen.SignUp.route){
             SignUpScreen(
                 onNavigateToLogin = {
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.Login.route) //TODO: change to login screen OR role dashboard
                 },
             )
+        }
+        composable(Screen.ManagerDashBoard.route){
+            ManagerDashboardScreen()
+        }
+        composable(Screen.EmployeeDashBoard.route){
+            EmployeeDashboardScreen()
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartschedule.data.repository.auth.AuthRepository
 import com.example.smartschedule.data.repository.Result
+import com.example.smartschedule.domain.models.user.User
 import com.example.smartschedule.domain.usecase.auth.LoginUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateEmailUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidatePasswordUseCase
@@ -26,8 +27,8 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _loginResult = MutableStateFlow<Result<FirebaseUser?>?>(null)
-    val loginResult: StateFlow<Result<FirebaseUser?>?> = _loginResult.asStateFlow()
+    private val _loginResult = MutableStateFlow<Result<User?>?>(null)
+    val loginResult: StateFlow<Result<User?>?> = _loginResult.asStateFlow()
 
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
@@ -77,18 +78,26 @@ class LoginViewModel @Inject constructor(
     private fun login() {
         val email = _uiState.value.email
         val password = _uiState.value.password
-        println("LoginViewModel: login(email: $email)")
+
         viewModelScope.launch {
-            authRepository.login(email, password)
-                .collect { result ->
-                    println("LoginViewModel: login result: $result")
-                    _loginResult.value = result
-                    if (result is Result.Error) {
-                        _uiState.update { it.copy(error = result.exception.message) }
+            loginUseCase(email, password).collect { result ->
+                when (result) {
+                    is Result.Loading -> _uiState.update { it.copy(isLoading = true, error = null) }
+
+                    is Result.Success -> {
+                        _uiState.update { it.copy(isLoading = false, error = null, isSuccess = true) }
+                        _loginResult.value = result
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update { it.copy(isLoading = false, error = result.exception.message) }
+                        _loginResult.value = result
                     }
                 }
+            }
         }
     }
+
 
     fun logout() {
         println("LoginViewModel: logout()")

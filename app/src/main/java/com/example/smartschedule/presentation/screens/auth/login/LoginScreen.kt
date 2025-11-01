@@ -44,27 +44,29 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.smartschedule.R
 import com.example.smartschedule.data.repository.Result
+import com.example.smartschedule.domain.models.user.User
 import com.example.smartschedule.presentation.viewmodel.auth.LoginViewModel
 
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (User?) -> Unit,
     onSignUpClick: () -> Unit
 ) {
-    val loginResult by loginViewModel.loginResult.collectAsState()
+    val loginUiState by loginViewModel.loginResult.collectAsState()
     val uiState by loginViewModel.uiState.collectAsState()
 
     // Handle successful login navigation
-    LaunchedEffect(loginResult) {
-        if (loginResult is Result.Success) {
-            onLoginSuccess()
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess && loginUiState is Result.Success) {
+            val user = (loginUiState as Result.Success<User?>).data
+            println(user?.role)
+            onLoginSuccess(user)
         }
     }
 
     LoginContent(
         uiState = uiState,
-        loginResult = loginResult,
         onEvent = loginViewModel::onEvent,
         onSignUpClick = onSignUpClick
     )
@@ -73,7 +75,6 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     uiState: LoginState,
-    loginResult: Result<*>?,
     onEvent: (LoginUiEvent) -> Unit,
     onSignUpClick: () -> Unit
 ) {
@@ -153,7 +154,7 @@ fun LoginContent(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(12.dp),
-                enabled = loginResult !is Result.Loading // Disable button while loading
+                enabled = !uiState.isLoading // Disable button while loading
             ) {
                 Text("Login", fontSize = 18.sp)
             }
@@ -169,7 +170,7 @@ fun LoginContent(
 
             // Handle login state changes
             Box(modifier = Modifier.height(24.dp), contentAlignment = Alignment.Center) {
-                if (loginResult is Result.Loading) {
+                if (uiState.isLoading) {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
                 uiState.error?.let {
@@ -184,12 +185,15 @@ fun LoginContent(
     }
 }
 
+
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
     LoginContent(
         uiState = LoginState("you@example.com", "password"),
-        loginResult = null,
         onSignUpClick = {},
         onEvent = {}
     )
@@ -199,8 +203,7 @@ fun LoginScreenPreview() {
 @Composable
 fun LoginScreenLoadingPreview() {
     LoginContent(
-        uiState = LoginState(),
-        loginResult = Result.Loading,
+        uiState = LoginState(isLoading = true),
         onSignUpClick = {},
         onEvent = {}
     )
@@ -211,7 +214,6 @@ fun LoginScreenLoadingPreview() {
 fun LoginScreenErrorPreview() {
     LoginContent(
         uiState = LoginState(error = "Invalid credentials. Please try again."),
-        loginResult = Result.Error(Exception()),
         onSignUpClick = {},
         onEvent = {}
     )

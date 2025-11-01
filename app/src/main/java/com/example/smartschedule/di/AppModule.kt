@@ -57,8 +57,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase {
-        return LoginUseCase(authRepository)
+    fun provideLoginUseCase(authRepository: AuthRepository,userRepository: UserRepository): LoginUseCase {
+        return LoginUseCase(authRepository,userRepository)
     }
 
     @Provides

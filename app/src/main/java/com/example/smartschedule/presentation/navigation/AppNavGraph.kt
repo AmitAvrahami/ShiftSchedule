@@ -21,11 +21,7 @@ fun AppNavGraph(navController: NavHostController){
             LoginScreen(
                 onLoginSuccess = { user ->
                     user?.let { user ->
-                        when (user.role.getRole()) {
-                            Roles.ADMIN -> navController.navigate(Screen.ManagerDashBoard.route)
-                            Roles.MANAGER -> navController.navigate(Screen.ManagerDashBoard.route)
-                            Roles.EMPLOYEE -> navController.navigate(Screen.EmployeeDashBoard.route)
-                        }
+                        navController.navigateToDashboard(user.role.getRole())
                     }
                 },
                 onSignUpClick = {

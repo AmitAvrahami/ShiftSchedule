@@ -1,7 +1,6 @@
 package com.example.smartschedule.domain.models.shift
 
 import com.example.smartschedule.domain.models.constraint.ConstraintStrategy
-import com.example.smartschedule.domain.models.employee.Employee
 import java.time.LocalDateTime
 
 data class Shift(
@@ -9,7 +8,7 @@ data class Shift(
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
     val strategy: ShiftStrategy,
-    val assignedEmployees: List<Employee>
+ //   val assignedEmployees: List<Employee>
 )
 
 interface ShiftStrategy{

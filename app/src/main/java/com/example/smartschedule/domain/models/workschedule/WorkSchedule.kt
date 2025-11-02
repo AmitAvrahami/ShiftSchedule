@@ -1,7 +1,6 @@
 package com.example.smartschedule.domain.models.workschedule
 
 import android.text.format.DateUtils
-import com.example.smartschedule.domain.models.employee.Employee
 import com.example.smartschedule.domain.models.shift.Shift
 import com.example.smartschedule.domain.models.shiftassignment.Assignment
 import com.example.smartschedule.domain.models.user.roles.EmployeeRole

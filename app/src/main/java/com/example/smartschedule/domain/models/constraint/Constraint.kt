@@ -1,7 +1,6 @@
 package com.example.smartschedule.domain.models.constraint
 
 import androidx.compose.animation.core.AnimationEndReason
-import com.example.smartschedule.domain.models.employee.Employee
 import com.example.smartschedule.domain.models.shift.Shift
 import com.example.smartschedule.domain.models.user.roles.EmployeeRole
 

@@ -71,7 +71,7 @@ fun EmployeeDashboardScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item { NextShiftCard() }
-            item { TodaysShiftsSection() }
+            item { TodayShiftsSection() }
             item { MyWeekSection() }
             item { ManagerAnnouncementsSection() }
             item { QuickActionsSection() }
@@ -140,7 +140,7 @@ fun NextShiftCard() {
 }
 
 @Composable
-fun TodaysShiftsSection() {
+fun TodayShiftsSection() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text("Today's shifts", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))

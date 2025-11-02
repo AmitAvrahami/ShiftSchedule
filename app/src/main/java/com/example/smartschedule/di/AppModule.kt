@@ -1,5 +1,7 @@
 package com.example.smartschedule.di
 
+import android.content.Context
+import com.example.smartschedule.data.local.datastore.user_session.UserSessionManager
 import com.example.smartschedule.data.repository.auth.AuthRepository
 import com.example.smartschedule.data.repository.auth.AuthRepositoryImpl
 import com.example.smartschedule.data.repository.user.UserRepository
@@ -16,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -57,8 +60,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLoginUseCase(authRepository: AuthRepository,userRepository: UserRepository): LoginUseCase {
-        return LoginUseCase(authRepository,userRepository)
+    fun provideLoginUseCase(
+        authRepository : AuthRepository ,
+        userRepository : UserRepository ,
+        sessionManager : UserSessionManager
+    ) : LoginUseCase {
+        return LoginUseCase(authRepository , userRepository , sessionManager)
     }
 
     @Provides
@@ -100,4 +107,11 @@ object AppModule {
             validatePassword
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideUserSessionManager(
+        @ApplicationContext context: Context
+    ): UserSessionManager = UserSessionManager(context)
+
 }

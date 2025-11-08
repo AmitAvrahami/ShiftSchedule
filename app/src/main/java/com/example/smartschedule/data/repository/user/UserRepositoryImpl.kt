@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val fireStore: FirebaseFirestore,
+    fireStore: FirebaseFirestore,
 ) : UserRepository {
     private val usersCollection = fireStore.collection("users")
 

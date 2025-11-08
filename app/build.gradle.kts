@@ -81,7 +81,7 @@ dependencies {
 
     //HILT
     implementation(libs.hilt.android)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     ksp(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.compiler)
@@ -92,6 +92,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     testImplementation(libs.androidx.room.testing)
+
+    //UI
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
+
 
 
 }

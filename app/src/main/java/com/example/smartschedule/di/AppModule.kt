@@ -4,8 +4,13 @@ import android.content.Context
 import com.example.smartschedule.data.local.datastore.user_session.UserSessionManager
 import com.example.smartschedule.data.repository.auth.AuthRepository
 import com.example.smartschedule.data.repository.auth.AuthRepositoryImpl
+import com.example.smartschedule.data.repository.shift_assigment.ShiftAssignmentRepository
+import com.example.smartschedule.data.repository.shift_assigment.ShiftAssignmentRepositoryImpl
 import com.example.smartschedule.data.repository.user.UserRepository
 import com.example.smartschedule.data.repository.user.UserRepositoryImpl
+import com.example.smartschedule.data.repository.work_schedule.WorkScheduleRepositoryImp
+import com.example.smartschedule.domain.repository.workschedule.WorkScheduleRepository
+import com.example.smartschedule.domain.usecase.assigment.GetNextAssignmentUseCase
 import com.example.smartschedule.domain.usecase.auth.LoginUseCase
 import com.example.smartschedule.domain.usecase.auth.SignupUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateEmailUseCase
@@ -13,6 +18,7 @@ import com.example.smartschedule.domain.usecase.auth.validation.ValidateFullName
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateNationalIdUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidatePasswordUseCase
 import com.example.smartschedule.domain.usecase.auth.validation.ValidateSignUpInputUseCase
+import com.example.smartschedule.domain.usecase.user.GetUserByIdUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -114,4 +120,28 @@ object AppModule {
         @ApplicationContext context: Context
     ): UserSessionManager = UserSessionManager(context)
 
+    @Provides
+    @Singleton
+    fun provideGetUserByIdUseCase(userRepository: UserRepository): GetUserByIdUseCase {
+        return GetUserByIdUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetNextAssignmentUseCase(shiftAssignmentRepository: ShiftAssignmentRepository): GetNextAssignmentUseCase {
+        return GetNextAssignmentUseCase(shiftAssignmentRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkScheduleRepository(firestore: FirebaseFirestore): WorkScheduleRepository {
+        return WorkScheduleRepositoryImp(firestore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideShiftAssignmentRepository(firestore: FirebaseFirestore): ShiftAssignmentRepository {
+        // You'll need to create this implementation
+        return ShiftAssignmentRepositoryImpl(firestore)
+    }
 }

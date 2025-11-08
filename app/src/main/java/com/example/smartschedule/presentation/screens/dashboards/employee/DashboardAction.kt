@@ -8,12 +8,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class DashboardAction(
-    val title: String,
-    val icon: ImageVector
 ) {
-    data object ViewSchedule : DashboardAction("סידור עבודה", Icons.Default.CalendarToday)
-    data object RequestShiftSwap : DashboardAction("בקשת החלפה", Icons.AutoMirrored.Filled.CompareArrows)
-    data object RequestTimeOff : DashboardAction("בקשת חופש", Icons.Default.EventBusy)
-    data object ViewWeeklyShifts : DashboardAction("משמרות שבוע", Icons.Default.DateRange)
-    data object ViewMessages : DashboardAction("הודעות מנהל", Icons.AutoMirrored.Filled.Message)
+    data object ViewSchedule : DashboardAction()
+    data object RequestShiftSwap : DashboardAction()
+    data object ContactManager : DashboardAction()
+    object LoadData : DashboardAction()
+}
+
+sealed class UiEvent {
+    data class Navigate(val route: String) : UiEvent()
 }

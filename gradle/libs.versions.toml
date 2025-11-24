@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.0"
+agp = "8.13.1"
 datastorePreferencesCore = "1.1.7"
 firebaseBomVersion = "34.4.0"
 googleFirebaseBom = "34.5.0"

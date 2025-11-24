@@ -12,10 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
-import com.example.smartschedule.presentation.navigation.AppNavGraph
-import com.example.smartschedule.presentation.screens.auth.login.LoginScreen
-import com.example.smartschedule.presentation.screens.auth.signup.SignUpScreen
+import com.example.smartschedule.feature.smartSchedule.ui.ScheduleScreen
 import com.example.smartschedule.ui.theme.SmartScheduleTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,35 +21,43 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             SmartScheduleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-//                        LoginScreen(){}
-//                        SignUpScreen()
-                        val navController =  rememberNavController()
-                        AppNavGraph(navController=navController)
-
-                    }
-                }
+                ScheduleScreen()
             }
         }
     }
+}
 
-    @Composable
-    fun Greeting(name: String, modifier: Modifier = Modifier) {
-        Text(
-            text = "Hello $name!",
-            modifier = modifier
-        )
-    }
+//        // 1. צור את אובייקט הדמה
+//        val dummyWorkSchedule = WorkScheduleMapper.createDummyWorkSchedule()
+//
+//// 2. המר אותו למפה
+//        val workScheduleMap = WorkScheduleMapper.toMap(dummyWorkSchedule)
+//
+// val firestore = FirebaseFirestore.getInstance()
+// firestore.collection("workSchedules").add(workScheduleMap)
+//     .addOnSuccessListener { documentReference ->
+//         Log.d("Firebase", "DocumentSnapshot added with ID: ${documentReference.id}")
+//     }
+//     .addOnFailureListener { e ->
+//         Log.w("Firebase", "Error adding document", e)
+//     }
+//
+//    }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun GreetingPreview() {
-        SmartScheduleTheme {
-            Greeting("Android")
-        }
+@Composable
+fun Greeting(name : String , modifier : Modifier = Modifier) {
+    Text(
+        text = "Hello $name!" ,
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    SmartScheduleTheme {
+        Greeting("Android")
     }
 }

@@ -38,6 +38,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
     }
     buildFeatures {
         compose = true
@@ -95,6 +96,7 @@ dependencies {
 
     //UI
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
 
 

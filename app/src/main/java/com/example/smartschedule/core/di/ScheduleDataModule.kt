@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class) // המודול הזה חי לכל אורך חיי האפליקציה
+@InstallIn(SingletonComponent::class)
 abstract class ScheduleDataModule {
 
     @Binds
@@ -17,4 +17,5 @@ abstract class ScheduleDataModule {
     abstract fun bindScheduleRepository(
         fakeImpl: FakeScheduleRepository
     ): ScheduleRepository
+
 }

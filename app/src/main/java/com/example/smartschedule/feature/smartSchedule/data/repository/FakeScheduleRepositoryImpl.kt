@@ -73,9 +73,16 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
                 15 ,
                 23
             ) ,
+            createShift(
+                3,
+                today.plusDays(2),
+                ShiftType.MORNING,
+                15,
+                23
+            ),
             // יום שלישי: משמרת לילה תקינה
             createShift(
-                3 ,
+                4 ,
                 today.plusDays(1) ,
                 ShiftType.NIGHT ,
                 22 ,
@@ -102,7 +109,12 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
                 103 ,
                 2 ,
                 2
-            )
+            ),
+            createAssignment(
+                104 ,
+                3 ,
+                1
+            ),
         )
 
         return WorkSchedule(

@@ -5,6 +5,7 @@ import com.example.smartschedule.core.domain.model.smartSchedule.enums.Assignmen
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.BoardStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.collections.mapNotNull
 
 
 data class WorkSchedule(
@@ -43,4 +44,9 @@ data class WorkSchedule(
         }
         return copy(assignments = updated)
     }
+
+    fun getAssignmentsForEmployee(employeeId: EmployeeId): List<ShiftAssignment> =
+        assignments.filter { assignment -> assignment.isAssignedAndActiveTo(employeeId) }
+
+
 }

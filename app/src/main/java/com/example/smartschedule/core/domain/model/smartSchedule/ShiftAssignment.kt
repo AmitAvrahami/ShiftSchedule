@@ -12,4 +12,8 @@ data class ShiftAssignment(
     val shiftId: ShiftId,
     val employeeId: EmployeeId ,
     val status: AssignmentStatus
-)
+){
+    fun isAssignedTo(employeeId: EmployeeId): Boolean = this.employeeId == employeeId
+    fun isActiveAssignment(): Boolean = status == AssignmentStatus.ACTIVE
+    fun isAssignedAndActiveTo(employeeId: EmployeeId): Boolean = isAssignedTo(employeeId) && isActiveAssignment()
+}

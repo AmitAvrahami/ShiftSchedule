@@ -17,6 +17,12 @@ class MainViewModel @Inject constructor(
     private val userPreferences : UserPreferences
 ): ViewModel() {
 
+    val userRole : StateFlow<EmployeeRole?> = userPreferences.userRole
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
     val startDestination : StateFlow<String?> = userPreferences.userRole
         .map { role ->
             when(role){

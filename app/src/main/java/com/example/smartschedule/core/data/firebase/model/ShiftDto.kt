@@ -21,23 +21,3 @@ data class ShiftDto(
 )
 
 
-fun ShiftDto.toDomainShift(): Shift {
-    return Shift(
-        id = ShiftId(shiftId) ,
-        date = date.tryParse(
-            { LocalDate.parse(date) } ,
-            { LocalDate.now() }) ,
-        startTime = startTime.tryParse(
-            { LocalTime.parse(startTime) } ,
-            { LocalTime.MIN }) ,
-        endTime = endTime.tryParse(
-            { LocalTime.parse(endTime) } ,
-            { LocalTime.MAX }) ,
-        shiftType = type.tryParse(
-            { ShiftType.valueOf(it) } ,
-            { ShiftType.MORNING }) ,
-        notes = notes ,
-//        requiredEmployees = requiredEmployees,
-//        definitionId = definitionId
-    )
-}

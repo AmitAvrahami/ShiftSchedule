@@ -19,12 +19,4 @@ data class AssignmentDto(
 )
 
 
-fun AssignmentDto.toDomainAssignment(shiftIdStr: String, scheduleIdStr: String): ShiftAssignment {
-    return ShiftAssignment(
-        id = ShiftAssignmentId(assignmentId) ,
-        shiftId = ShiftId(shiftIdStr) , 
-        employeeId = EmployeeId(employeeId) ,
-        status =  status.tryParse({ AssignmentStatus.valueOf(it) }, { AssignmentStatus.ACTIVE }),
-        workScheduleId = WorkScheduleId(scheduleIdStr)
-    )
-}
+

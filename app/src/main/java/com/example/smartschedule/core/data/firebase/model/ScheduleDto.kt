@@ -21,29 +21,5 @@ data class ScheduleDto(
     val updateDate: Long? = null
 )
 
-fun ScheduleDto.toDomain(): WorkSchedule {
-    val start = startDate.tryParse( { LocalDate.parse(it) }, { LocalDate.now() })
-    val end = endDate.tryParse( { LocalDate.parse(it) } ,{ LocalDate.now() })
-
-    val domainShifts = shifts.map { it.toDomainShift() }
 
 
-    val domainAssignments = shifts.flatMap { shiftDto ->
-        shiftDto.assignments.map { assignmentDto ->
-            assignmentDto.toDomainAssignment(shiftDto.shiftId, scheduleId)
-        }
-    }
-
-    return WorkSchedule(
-        id = WorkScheduleId(scheduleId),
-        name = name,
-        period = start..end,
-        status = status.tryParse( { BoardStatus.valueOf(it) },{ BoardStatus.DRAFT }),
-        notes = notes,
-        shifts = domainShifts,
-        assignments = domainAssignments,
-        createdBy = EmployeeId(createdBy),
-        creationDate = LocalDateTime.now(), // או המרה מ-Long
-        updateDate = updateDate?.let { LocalDateTime.now() } // פשטות כרגע
-    )
-}

@@ -22,25 +22,3 @@ data class ConstraintDto(
     val updatedAt : Long = System.currentTimeMillis()
 )
 
-fun ConstraintDto.toDomain(): Constraint {
-    return Constraint(
-        id = ConstraintId(constraintId),
-        employeeId = EmployeeId(employeeId),
-
-        startDate = startDate.tryParse({ LocalDate.parse(it) }, { LocalDate.now()}),
-
-        endDate = endDate.tryParse({ LocalDate.parse(it) }, { LocalDate.now()}),
-
-
-        startTime = startTime?.let {it.tryParse({ LocalTime.parse(it) }, { LocalTime.now()})},
-
-        endTime = endTime?.let {it.tryParse({ LocalTime.parse(it) }, { LocalTime.now()})},
-
-        type = type.tryParse({ ConstraintType.valueOf(it)},
-            { ConstraintType.FULL_DAY }),
-
-        reason = reason
-    )
-
-
-}

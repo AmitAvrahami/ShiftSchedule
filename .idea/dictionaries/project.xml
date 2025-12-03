@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>daterangeconstraintstrategy</w>
+      <w>dtos</w>
       <w>fulldayconstraintstrategy</w>
       <w>recurringconstraintstrategy</w>
       <w>shiftconstraintstrategy</w>

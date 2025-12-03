@@ -22,16 +22,3 @@ data class UserDto(
     val updatedAt: Long = System.currentTimeMillis()
 )
 
-fun UserDto.toDomain() : Employee{
-    val id = EmployeeId(this.userId)
-    val role = try{ EmployeeRole.valueOf(this.role) }catch (e: Exception){ EmployeeRole.EMPLOYEE }
-    val employmentType = try { EmploymentType.valueOf(this.employmentType) }catch (e: Exception){ EmploymentType.FULL_TIME }
-    return Employee(
-        id = id ,
-        fullName = "${this.firstName} ${this.lastName}",
-        role = role ,
-        isActive = this.isActive ,
-        preferredShiftTypeIds = this.preferredShiftTypeIds ,
-        employmentType = employmentType
-    )
-}

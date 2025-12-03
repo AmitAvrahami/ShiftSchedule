@@ -4,7 +4,7 @@ import com.example.smartschedule.core.domain.model.employees.enums.EmployeeRole
 import com.example.smartschedule.core.domain.model.employees.enums.EmploymentType
 
 @JvmInline
-value class EmployeeId(val value: Int)
+value class EmployeeId(val value: String)
 
 data class Employee(
     val id: EmployeeId,
@@ -14,4 +14,3 @@ data class Employee(
     val preferredShiftTypeIds: List<Int>,
     val employmentType: EmploymentType
 )
-

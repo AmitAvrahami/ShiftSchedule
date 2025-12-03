@@ -6,6 +6,7 @@ import com.example.smartschedule.core.domain.model.smartSchedule.ShiftAssignment
 import com.example.smartschedule.core.domain.model.smartSchedule.ShiftAssignmentId
 import com.example.smartschedule.core.domain.model.smartSchedule.ShiftId
 import com.example.smartschedule.core.domain.model.smartSchedule.WorkSchedule
+import com.example.smartschedule.core.domain.model.smartSchedule.WorkScheduleId
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.AssignmentStatus
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.BoardStatus
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.ShiftType
@@ -21,7 +22,7 @@ import java.time.LocalTime
 class DoubleBookingRule {
 
     private val rule = DoubleBookingRule()
-    private val employeeId = EmployeeId(1)
+    private val employeeId = EmployeeId("1")
 
     private fun createScheduleWithShifts(
         vararg shiftsTimes: Pair<LocalTime , LocalTime> // מקבל זוגות של התחלה-סוף
@@ -31,7 +32,7 @@ class DoubleBookingRule {
         val assignments = mutableListOf<ShiftAssignment>()
 
         shiftsTimes.forEachIndexed { index, (start, end) ->
-            val shiftId = ShiftId(index)
+            val shiftId = ShiftId("$index")
             shifts.add(
                 Shift.fromType(
                     id = shiftId,
@@ -42,22 +43,22 @@ class DoubleBookingRule {
             )
             assignments.add(
                 ShiftAssignment(
-                    id = ShiftAssignmentId(index) ,
+                    id = ShiftAssignmentId("$index") ,
                     shiftId = shiftId,
                     employeeId = employeeId,
                     status = AssignmentStatus.ACTIVE,
-                    workScheduleId = 1
+                    workScheduleId = WorkScheduleId("1")
                 )
             )
         }
 
         return WorkSchedule(
-            id = 1,
+            id = WorkScheduleId("1"),
             shifts = shifts,
             assignments = assignments,
             period = date..date,
             name = "Test",
-            createdBy = 1,
+            createdBy = EmployeeId("1"),
             status = BoardStatus.DRAFT,
             creationDate = LocalDateTime.now(),
             updateDate = null,

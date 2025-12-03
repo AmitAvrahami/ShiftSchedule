@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 @JvmInline
-value class ConstraintId(val value: Int)
+value class ConstraintId(val value: String)
 
 /**
  * אילוץ חד-פעמי או על טווח תאריכים.

@@ -5,14 +5,17 @@ import com.example.smartschedule.core.domain.model.smartSchedule.enums.Assignmen
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.BoardStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 import kotlin.collections.mapNotNull
 
+@JvmInline
+value class WorkScheduleId(val value: String)
 
 data class WorkSchedule(
-    val id: Int,
+    val id: WorkScheduleId,
     val name: String,
     val period: ClosedRange<LocalDate>,
-    val createdBy: Int,
+    val createdBy: EmployeeId,
     val status: BoardStatus ,
     val notes: String?,
     val shifts: List<Shift>,
@@ -26,7 +29,7 @@ data class WorkSchedule(
 
     fun assignEmployee(shiftId: ShiftId, employeeId: EmployeeId): WorkSchedule {
         val newAssignment = ShiftAssignment(
-            id = ShiftAssignmentId(assignments.size + 1), // MVP, אחר כך תחליף לג׳נרטור רציני
+            id = ShiftAssignmentId(UUID.randomUUID().toString()), // MVP, אחר כך תחליף לג׳נרטור רציני
             workScheduleId = id,
             shiftId = shiftId,
             employeeId = employeeId,

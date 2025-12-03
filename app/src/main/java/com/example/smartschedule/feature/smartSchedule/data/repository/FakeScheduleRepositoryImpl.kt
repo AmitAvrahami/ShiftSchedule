@@ -27,7 +27,7 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
 
     private val employees = listOf(
         Employee(
-            id = EmployeeId(1) ,
+            id = EmployeeId("1") ,
             fullName = "דני כהן" ,
             role = EmployeeRole.EMPLOYEE ,
             isActive = true ,
@@ -38,7 +38,7 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
             employmentType = EmploymentType.FULL_TIME
         ) ,
         Employee(
-            id = EmployeeId(2) ,
+            id = EmployeeId("2") ,
             fullName = "מיכל לוי" ,
             role = EmployeeRole.EMPLOYEE ,
             isActive = true ,
@@ -46,7 +46,7 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
             employmentType = EmploymentType.PART_TIME
         ) ,
         Employee(
-            id = EmployeeId(3) ,
+            id = EmployeeId("3") ,
             fullName = "רונן בר" ,
             role = EmployeeRole.EMPLOYEE ,
             isActive = true ,
@@ -59,7 +59,7 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
         val shifts = listOf(
             // יום שני: משמרת בוקר (08-16)
             createShift(
-                1 ,
+                "1" ,
                 today ,
                 ShiftType.MORNING ,
                 8 ,
@@ -67,14 +67,14 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
             ) ,
             // יום שני: משמרת ערב (15-23) -> חפיפה של שעה!
             createShift(
-                2 ,
+                "2" ,
                 today ,
                 ShiftType.NOON ,
                 15 ,
                 23
             ) ,
             createShift(
-                3,
+                "3",
                 today.plusDays(2),
                 ShiftType.MORNING,
                 15,
@@ -82,7 +82,7 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
             ),
             // יום שלישי: משמרת לילה תקינה
             createShift(
-                4 ,
+                "4" ,
                 today.plusDays(1) ,
                 ShiftType.NIGHT ,
                 22 ,
@@ -93,38 +93,38 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
         val assignments = listOf(
             // דני (עובד 1) עובד בוקר
             createAssignment(
-                101 ,
-                1 ,
-                1
+                "101" ,
+                "1" ,
+                "1"
             ) ,
             // דני (עובד 1) משובץ גם לערב -> Error: Overlapping Shifts!
             createAssignment(
-                102 ,
-                2 ,
-                1
+                "102" ,
+                "2" ,
+                "1"
             ) ,
 
             // מיכל (עובדת 2) עובדת בערב (תקין)
             createAssignment(
-                103 ,
-                2 ,
-                2
+                "103" ,
+                "2" ,
+                "2"
             ),
             createAssignment(
-                104 ,
-                3 ,
-                1
+                "104" ,
+                "3" ,
+                "1"
             ),
         )
 
         return WorkSchedule(
-            id = 1 ,
+            id = WorkScheduleId("1") ,
             name = "סידור שבועי" ,
             period = today .. today.plusDays(6) ,
             shifts = shifts ,
             assignments = assignments ,
             status = BoardStatus.DRAFT ,
-            createdBy = 999 ,
+            createdBy = EmployeeId("999") ,
             creationDate = LocalDateTime.now() ,
             updateDate = null ,
             notes = null
@@ -148,7 +148,7 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
 
     // Helpers
     private fun createShift(
-        id : Int ,
+        id : String ,
         date : LocalDate ,
         type : ShiftType ,
         start : Int ,
@@ -168,11 +168,11 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
         notes = null
     )
 
-    private fun createAssignment(id : Int , shiftId : Int , empId : Int) = ShiftAssignment(
+    private fun createAssignment(id : String , shiftId : String , empId : String) = ShiftAssignment(
         id = ShiftAssignmentId(id) ,
         shiftId = ShiftId(shiftId) ,
         employeeId = EmployeeId(empId) ,
         status = AssignmentStatus.ACTIVE ,
-        workScheduleId = 1
+        workScheduleId = WorkScheduleId("1")
     )
 }

@@ -176,7 +176,7 @@ fun getShiftColor(type: ShiftType): Color {
 @Composable
 fun ShiftCardPreview() {
     val sampleShift = Shift(
-        id = ShiftId(1),
+        id = ShiftId("1"),
         date = LocalDate.now(),
         startTime = LocalTime.of(8, 0),
         endTime = LocalTime.of(16, 0),
@@ -185,7 +185,7 @@ fun ShiftCardPreview() {
     )
 
     val sampleEmployee = Employee(
-        id = EmployeeId(1) ,
+        id = EmployeeId("1") ,
         fullName = "דני כהן" ,
         role = EmployeeRole.EMPLOYEE ,
         isActive = true ,

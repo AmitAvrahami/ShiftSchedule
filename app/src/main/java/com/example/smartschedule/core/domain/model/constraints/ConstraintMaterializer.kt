@@ -56,7 +56,7 @@ object ConstraintMaterializer {
 
         return Constraint(
             id = id,
-            employeeId = EmployeeId(employeeId),
+            employeeId = EmployeeId(employeeId.value),
             startDate = date,
             endDate = date,
             startTime = times.first,

@@ -4,11 +4,11 @@ import com.example.smartschedule.core.domain.model.employees.EmployeeId
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.AssignmentStatus
 
 @JvmInline
-value class ShiftAssignmentId(val value: Int)
+value class ShiftAssignmentId(val value: String)
 
 data class ShiftAssignment(
     val id: ShiftAssignmentId,
-    val workScheduleId: Int,
+    val workScheduleId: WorkScheduleId,
     val shiftId: ShiftId,
     val employeeId: EmployeeId ,
     val status: AssignmentStatus

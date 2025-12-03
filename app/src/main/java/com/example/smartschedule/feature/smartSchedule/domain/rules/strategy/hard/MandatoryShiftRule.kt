@@ -46,7 +46,7 @@ class MandatoryShiftRule : ScheduleRule {
             }
 
             for (rule in requiredEmployeesRules) {
-                val fixedEmployeeId = EmployeeId(rule.employeeId)
+                val fixedEmployeeId = EmployeeId(rule.employeeId.value)
 
                 val isEmployeeUnavailable = isEmployeeBlockedByConstraint(
                     shift,

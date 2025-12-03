@@ -17,23 +17,21 @@ import com.example.smartschedule.core.ui.MainAppScreen
 import com.example.smartschedule.core.ui.MainViewModel
 import com.example.smartschedule.core.ui.navigation.AppNavGraph
 import com.example.smartschedule.ui.theme.SmartScheduleTheme
+import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     private val viewModel: MainViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition {
             viewModel.startDestination.value == null
         }
-
-        super.onCreate(savedInstanceState)
         setContent {
             SmartScheduleTheme {
                 val startDest by viewModel.startDestination.collectAsState()

@@ -59,7 +59,7 @@ class DoubleBookingRule : ScheduleRule {
     }
 
     private fun convertToTimeRange(
-        assignmentId: Int,
+        assignmentId: String,
         employeeId: EmployeeId,
         shift: Shift
     ): ShiftTimeRange {
@@ -86,7 +86,7 @@ class DoubleBookingRule : ScheduleRule {
 
     // מבנה עזר פנימי
     private data class ShiftTimeRange(
-        val assignmentId: Int,
+        val assignmentId: String,
         val shiftId: ShiftId ,
         val employeeId: EmployeeId ,
         val start: LocalDateTime,

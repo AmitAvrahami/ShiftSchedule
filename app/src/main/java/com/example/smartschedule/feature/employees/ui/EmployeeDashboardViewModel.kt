@@ -28,7 +28,7 @@ class EmployeeDashboardViewModel @Inject constructor(
 
     // נניח שיש לנו דרך לדעת מי המשתמש המחובר (לצורך הדוגמה נשתמש ב-ID 1 קבוע או נשלוף מה-Prefs)
     // באפליקציה אמיתית ה-ID מגיע מ-AuthRepository
-    private val currentEmployeeId = 1
+    private val currentEmployeeId = "1"
 
     val uiState: StateFlow<EmployeeUiState> = combine(
         repository.getWorkSchedule("schedule_id_1"),

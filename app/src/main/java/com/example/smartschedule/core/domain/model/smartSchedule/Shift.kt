@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 @JvmInline
-value class ShiftId(val value: Int)
+value class ShiftId(val value: String)
 
 data class Shift(
     val id: ShiftId,

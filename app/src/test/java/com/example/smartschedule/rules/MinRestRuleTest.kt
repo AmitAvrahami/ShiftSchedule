@@ -16,7 +16,7 @@ class MinRestRuleTest {
 
     // מגדירים את החוק עם ערכים ידועים לטסט: 8 שעות קריטי, 12 שעות מומלץ (כדי שיהיה קל לבדוק)
     private val rule = MinRestRule(minRestHoursHard = 8, recommendedRestHours = 12)
-    private val employeeId = EmployeeId(1)
+    private val employeeId = EmployeeId("1")
 
     // --- הטסטים ---
 
@@ -91,7 +91,7 @@ class MinRestRuleTest {
         val assignments = mutableListOf<ShiftAssignment>()
 
         shiftsData.forEachIndexed { index, data ->
-            val shiftId = ShiftId(index)
+            val shiftId = ShiftId("$index")
             shifts.add(
                 Shift(
                     shiftId,
@@ -104,17 +104,17 @@ class MinRestRuleTest {
             )
             assignments.add(
                 ShiftAssignment(
-                    id = ShiftAssignmentId(index),
+                    id = ShiftAssignmentId("$index"),
                     shiftId = shiftId,
                     employeeId = employeeId,
-                    status = AssignmentStatus.ACTIVE, workScheduleId = 1
+                    status = AssignmentStatus.ACTIVE, workScheduleId = WorkScheduleId("1")
                 )
             )
         }
 
         return WorkSchedule(
-            id = 1, shifts = shifts, assignments = assignments,
-            period = baseDate..baseDate.plusDays(7), name = "Test", createdBy = 1,
+            id = WorkScheduleId("1"), shifts = shifts, assignments = assignments,
+            period = baseDate..baseDate.plusDays(7), name = "Test", createdBy = EmployeeId("1"),
             status = BoardStatus.DRAFT, creationDate = LocalDateTime.now(),
             updateDate = null, notes = null
         )

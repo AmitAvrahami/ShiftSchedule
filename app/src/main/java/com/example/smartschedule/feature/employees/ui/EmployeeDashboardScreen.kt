@@ -317,7 +317,7 @@ fun TodayShiftCards(todayShifts: List<ShiftDisplayModel>) {
 fun EmployeeDashboardPreview() {
     // 1. יצירת נתוני דמה (Mock Data) לתצוגה
     val mockEmployee = Employee(
-        id = EmployeeId(1) ,
+        id = EmployeeId("1") ,
         fullName = "ישראל ישראלי" ,
         role = EmployeeRole.EMPLOYEE ,
         isActive = true ,
@@ -326,7 +326,7 @@ fun EmployeeDashboardPreview() {
     )
 
     val mockShift = Shift(
-        id = ShiftId(1) ,
+        id = ShiftId("1") ,
         date = LocalDate.now().plusDays(1) ,
         startTime = LocalTime.of(
             10 ,

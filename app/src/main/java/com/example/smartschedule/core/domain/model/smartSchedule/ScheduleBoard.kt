@@ -12,4 +12,4 @@ data class ScheduleBoard(
     val updateDate: LocalDateTime?,
     val notesDescription: String?,
     val status: BoardStatus
-)
+)//Todo : Refactor the Ids

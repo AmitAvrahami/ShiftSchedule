@@ -5,9 +5,13 @@ import com.example.smartschedule.core.data.firebase.model.ConstraintDto
 import com.example.smartschedule.core.data.firebase.model.ScheduleDto
 import com.example.smartschedule.core.data.firebase.model.ShiftDto
 import com.example.smartschedule.core.data.firebase.model.UserDto
+import com.example.smartschedule.core.data.firebase.model.WeeklyRuleDto
 import com.example.smartschedule.core.domain.model.constraints.Constraint
 import com.example.smartschedule.core.domain.model.constraints.ConstraintId
+import com.example.smartschedule.core.domain.model.constraints.WeeklyRule
+import com.example.smartschedule.core.domain.model.constraints.WeeklyRuleId
 import com.example.smartschedule.core.domain.model.constraints.enums.ConstraintType
+import com.example.smartschedule.core.domain.model.constraints.enums.RuleKind
 import com.example.smartschedule.core.domain.model.employees.Employee
 import com.example.smartschedule.core.domain.model.employees.EmployeeId
 import com.example.smartschedule.core.domain.model.employees.enums.EmployeeRole
@@ -21,6 +25,7 @@ import com.example.smartschedule.core.domain.model.smartSchedule.WorkScheduleId
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.AssignmentStatus
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.BoardStatus
 import com.example.smartschedule.core.domain.model.smartSchedule.enums.ShiftType
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -36,6 +41,7 @@ inline fun <T> String.tryParse(
     }
 }
 
+//From DTO to Domain
 fun UserDto.toDomain() : Employee{
     val id = EmployeeId(this.userId)
     val role = try{ EmployeeRole.valueOf(this.role) }catch (e: Exception){ EmployeeRole.EMPLOYEE }
@@ -49,7 +55,6 @@ fun UserDto.toDomain() : Employee{
         employmentType = employmentType
     )
 }
-
 fun ScheduleDto.toDomain(): WorkSchedule {
     val start = startDate.tryParse(
         { LocalDate.parse(it) } ,
@@ -114,7 +119,6 @@ fun AssignmentDto.toDomainAssignment(shiftIdStr: String, scheduleIdStr: String):
         workScheduleId = WorkScheduleId(scheduleIdStr)
     )
 }
-
 fun ConstraintDto.toDomain(): Constraint {
     return Constraint(
         id = ConstraintId(constraintId),
@@ -138,7 +142,22 @@ fun ConstraintDto.toDomain(): Constraint {
 
 }
 
+fun WeeklyRuleDto.toDomain(): WeeklyRule {
+    return WeeklyRule(
+        id = WeeklyRuleId(ruleId),
+        employeeId = EmployeeId(employeeId),
+        dayOfWeek = dayOfWeek.tryParse({ DayOfWeek.valueOf(it) }, { DayOfWeek.MONDAY } ),
+        shiftType = shiftType.tryParse({ ShiftType.valueOf(it) }, { ShiftType.MORNING }),
+        kind = kind.tryParse({ RuleKind.valueOf(it) }, { RuleKind.UNAVAILABLE }),
+        isActive = isActive,
+        notes = notes
+    )
+}
 
+
+
+
+//From Domain to DTO
 fun Employee.toDto(
     email: String = "",
     colorHex: String = "#808080",
@@ -230,3 +249,16 @@ fun Constraint.toDto(employeeName: String):ConstraintDto{
     )
 }
 
+fun WeeklyRule.toDto(): WeeklyRuleDto {
+    return WeeklyRuleDto(
+        ruleId = id.value,
+        employeeId = employeeId.value,
+
+        dayOfWeek = dayOfWeek.name,
+        shiftType = shiftType.name,
+        kind = kind.name,
+
+        isActive = isActive,
+        notes = notes
+    )
+}

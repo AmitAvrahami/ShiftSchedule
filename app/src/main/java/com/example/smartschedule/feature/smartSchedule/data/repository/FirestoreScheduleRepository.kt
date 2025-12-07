@@ -1,16 +1,20 @@
 package com.example.smartschedule.feature.smartSchedule.data.repository
 
-import android.system.Os.close
 import android.util.Log
 import com.example.smartschedule.core.data.firebase.constants.Collections
+import com.example.smartschedule.core.data.firebase.model.ConstraintDto
 import com.example.smartschedule.core.data.firebase.model.ScheduleDto
 import com.example.smartschedule.core.data.firebase.model.UserDto
+import com.example.smartschedule.core.data.firebase.model.WeeklyRuleDto
+import com.example.smartschedule.core.data.firebase.utils.observeCollection
+import com.example.smartschedule.core.data.firebase.utils.observeDocument
 import com.example.smartschedule.core.data.mapper.toDomain
 import com.example.smartschedule.core.data.mapper.toDto
 import com.example.smartschedule.core.domain.model.constraints.Constraint
 import com.example.smartschedule.core.domain.model.constraints.WeeklyRule
 import com.example.smartschedule.core.domain.model.employees.Employee
 import com.example.smartschedule.core.domain.model.smartSchedule.WorkSchedule
+import com.example.smartschedule.core.domain.time.convertLongToIsoDateString
 import com.example.smartschedule.feature.smartSchedule.domain.repository.ScheduleRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
@@ -23,7 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FirestoreScheduleRepository @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val firestore : FirebaseFirestore
 ) : ScheduleRepository {
 
     companion object {
@@ -48,50 +52,12 @@ class FirestoreScheduleRepository @Inject constructor(
      * @return A [Flow] that emits the `WorkSchedule` domain model. The flow will close
      *         with an error if the listener fails or if there's a problem deserializing the data.
      */
-    override fun getWorkSchedule(scheduleId : String) : Flow<WorkSchedule> = callbackFlow {
-        val docRef = firestore.collection(Collections.WORK_SCHEDULES).document(scheduleId)
-        val listenerRegistration = docRef.addSnapshotListener(MetadataChanges.INCLUDE) { snapshot , error ->
-            if (error != null) {
-                Log.e(
-                    TAG,
-                    "Listen failed.",
-                    error
-                )
-                close(error)
-                return@addSnapshotListener
+    override fun getWorkSchedule(scheduleId: String): Flow<WorkSchedule> {
+        return firestore.collection(Collections.WORK_SCHEDULES.path)
+            .document(scheduleId)
+            .observeDocument<ScheduleDto, WorkSchedule> { dto ->
+                dto.toDomain()
             }
-            if (snapshot != null && snapshot.exists()) {
-                try {
-                    val dto = snapshot.toObject(ScheduleDto::class.java)
-                    if (dto != null) {
-                        val domainSchedule = dto.toDomain()
-                        trySend(domainSchedule)
-                        Log.d(
-                            TAG,
-                            "Schedule update emitted"
-                        )
-                    }
-                } catch (e : Exception) {
-                    Log.e(
-                        TAG,
-                        "Data mapping error",
-                        e
-                    )
-                }
-            } else {
-                Log.d(
-                    TAG,
-                    "Current data: null (Document does not exist)"
-                )
-            }
-        }
-        awaitClose {
-            Log.d(
-                TAG,
-                "Closing listener"
-            )
-            listenerRegistration.remove()
-        }
     }
 
 
@@ -108,36 +74,43 @@ class FirestoreScheduleRepository @Inject constructor(
      * @return A `Flow` that emits a list of `Employee` objects on every update from Firestore.
      *         The flow will be closed with an exception if a listener error occurs.
      */
-    override fun getEmployees() : Flow<List<Employee>>  = callbackFlow {
-        val collectionRef = firestore.collection(Collections.USERS)
-        val registration = collectionRef.addSnapshotListener { snapshot, error ->
-            if (error != null) {
-                close(error)
-                return@addSnapshotListener
+    override fun getEmployees(): Flow<List<Employee>> {
+        return firestore.collection(Collections.USERS.path)
+            .observeCollection<UserDto, Employee> { dto ->
+                dto.toDomain()
             }
-
-            if (snapshot != null) {
-                val employees = snapshot.documents.mapNotNull { doc ->
-                    try {
-                        doc.toObject(UserDto::class.java)?.toDomain()
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error mapping user: ${doc.id}", e)
-                        null
-                    }
-                }
-                trySend(employees)
-            }
-        }
-        awaitClose { registration.remove() }
     }
 
+    /**
+     * Retrieves a real-time stream of constraints that are active within a given time period.
+     *
+     * This function queries the Firestore 'constraints' collection for documents whose 'endDate'
+     * is on or after the specified `start` date. This ensures that all potentially relevant
+     * constraints for the period are fetched. The results are then mapped from `ConstraintDto`
+     * data transfer objects to `Constraint` domain models.
+     *
+     * Note: The current implementation uses a `callbackFlow` but only sets up a query that
+     * leverages the `observeCollection` utility. The `end` parameter is not currently used in the
+     * Firestore query but is intended for future filtering logic.
+     *
+     * @param start The start of the time period as a Unix timestamp (in milliseconds).
+     * @param end The end of the time period as a Unix timestamp (in milliseconds).
+     * @return A [Flow] that emits a list of `Constraint` domain models. The flow will update
+     *         in real-time as constraints in Firestore are added, modified, or removed.
+     */
     override fun getConstraints(
-        start : Long ,
-        end : Long
-    ) : Flow<List<Constraint>> = callbackFlow { close() }
+        start: Long,
+        end: Long
+    ): Flow<List<Constraint>> {
 
+        val periodStartString = start.convertLongToIsoDateString()
 
-    override fun getWeeklyRules() : Flow<List<WeeklyRule>> = callbackFlow { close() }
+        return firestore.collection(Collections.CONSTRAINTS.path)
+            .whereGreaterThanOrEqualTo("endDate", periodStartString)
+            .observeCollection<ConstraintDto, Constraint> { dto ->
+                dto.toDomain()
+            }
+    }
 
     /**
      * Updates an existing work schedule in the Firestore database.
@@ -154,15 +127,38 @@ class FirestoreScheduleRepository @Inject constructor(
         return try {
             val scheduleDto = schedule.toDto()
 
-            firestore.collection(Collections.WORK_SCHEDULES)
+            firestore.collection(Collections.WORK_SCHEDULES.path)
                 .document(scheduleDto.scheduleId)
-                .set(scheduleDto) 
-                .await() 
+                .set(scheduleDto)
+                .await()
 
             Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error updating schedule", e)
+        } catch (e : Exception) {
+            Log.e(
+                TAG ,
+                "Error updating schedule" ,
+                e
+            )
             Result.failure(e)
         }
     }
-}
+
+    /**
+     * Retrieves a real-time stream of all weekly rules from Firestore.
+     *
+     * This function is intended to set up a snapshot listener on the 'weekly_rules' collection
+     * in Firestore. It would then map the documents to `WeeklyRule` domain objects and emit
+     * the complete list whenever the data changes. The listener would be automatically removed
+     * when the collecting coroutine is cancelled.
+     *
+     * NOTE: The current implementation is a placeholder and immediately closes the flow.
+     * It needs to be implemented to actually fetch data from Firestore.
+     *
+     * @return A [Flow] that is intended to emit a list of `WeeklyRule` objects.
+     */
+    override fun getWeeklyRules(): Flow<List<WeeklyRule>> {
+        return firestore.collection(Collections.WEEKLY_RULES.path)
+            .observeCollection<WeeklyRuleDto , WeeklyRule> { dto ->
+                dto.toDomain()
+            }
+    }}

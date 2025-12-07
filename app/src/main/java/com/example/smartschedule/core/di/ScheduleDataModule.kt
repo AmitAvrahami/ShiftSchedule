@@ -1,6 +1,7 @@
 package com.example.smartschedule.core.di
 
 import com.example.smartschedule.feature.smartSchedule.data.repository.FakeScheduleRepository
+import com.example.smartschedule.feature.smartSchedule.data.repository.FirestoreScheduleRepository
 import com.example.smartschedule.feature.smartSchedule.domain.repository.ScheduleRepository
 import dagger.Binds
 import dagger.Module
@@ -15,7 +16,7 @@ abstract class ScheduleDataModule {
     @Binds
     @Singleton
     abstract fun bindScheduleRepository(
-        fakeImpl: FakeScheduleRepository
+        repo: FirestoreScheduleRepository
     ): ScheduleRepository
 
 }

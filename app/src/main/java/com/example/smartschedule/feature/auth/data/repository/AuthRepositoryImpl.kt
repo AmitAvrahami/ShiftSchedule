@@ -1,10 +1,10 @@
 package com.example.smartschedule.feature.auth.data.repository
 
 import android.util.Log
+import com.example.smartschedule.core.domain.model.employees.EmployeeId
 import com.example.smartschedule.core.domain.utils.Result
 import com.example.smartschedule.feature.auth.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -16,40 +16,48 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     private val tag = this::class.java.simpleName
-
-    override val currentUser : FirebaseUser?
-        get() = firebaseAuth.currentUser
+    private var userId : EmployeeId? = null
+    override fun getCurrentUserId() : EmployeeId? {
+        return userId
+    }
 
     override suspend fun login(
         email : String ,
         password : String
-    ) : Flow<Result<FirebaseUser?>> = flow {
+    ) : Flow<Result<EmployeeId>> = flow {
         Log.d(tag, "login: with email: $email")
         emit(Result.Loading)
         val authResult = firebaseAuth.signInWithEmailAndPassword(
             email ,
             password
         ).await()
-        emit(Result.Success(authResult.user))
+        val uid = authResult.user?.uid ?: throw Exception("User ID is null")
+        userId = EmployeeId(uid)
+        Log.d(tag, "login: success for email: $email")
+        emit(Result.Success(EmployeeId(uid)))
     }.catch { e ->
         Log.e(tag, "login: failed for email: $email", e)
+        userId = null
         emit(Result.Error(e))
     }
 
     override suspend fun signup(
         email : String ,
         password : String
-    ) : Flow<Result<FirebaseUser?>> = flow {
+    ) : Flow<Result<EmployeeId>> = flow {
         Log.d(tag, "signup: with email: $email")
         emit(Result.Loading)
         val authResult = firebaseAuth.createUserWithEmailAndPassword(
             email ,
             password
         ).await()
-        val user = authResult.user ?: throw Exception("User creation failed")
-        emit(Result.Success(user))
+        val uid = authResult.user?.uid ?: throw Exception("User creation failed")
+        Log.d(tag, "signup: success for email: $email")
+        userId = EmployeeId(uid)
+        emit(Result.Success(EmployeeId(uid)))
     }.catch { e ->
         Log.e(tag, "signup: failed for email: $email", e)
+        userId = null
         emit(Result.Error(e))
     }
 
@@ -58,6 +66,8 @@ class AuthRepositoryImpl @Inject constructor(
         emit(Result.Loading)
         try {
             firebaseAuth.signOut()
+            userId = null
+            Log.d(tag, "logout: success")
             emit(Result.Success(Unit))
         } catch (e: Exception) {
             Log.e(tag, "logout: failed", e)
